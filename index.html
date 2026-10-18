@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="#0b1010">
+    <title>FormFit — Workout Pose Corrector</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="app-shell">
+        <aside class="sidebar">
+            <a class="brand" href="#"><span class="brand-mark">✳</span><span>form<span
+                        class="brand-accent">fit</span><small>AI WORKOUT COACH</small></span></a>
+            <nav><button class="nav-link active" data-page="workout">▦ &nbsp; Workout</button><button class="nav-link"
+                    data-page="how">◉ &nbsp; How it works</button><button class="nav-link" data-page="about">ⓘ &nbsp;
+                    About</button></nav>
+            <div class="sidebar-bottom">
+                <div class="privacy-icon">⌁</div><strong>Privacy matters</strong>
+                <p>Your camera runs only after you allow access. Frames are sent to the backend for pose processing.</p>
+                <span class="version">FORMFIT WEB · V1.0</span>
+            </div>
+        </aside>
+        <main class="main">
+            <header class="topbar">
+                <div class="mobile-brand">✳ form<span class="brand-accent">fit</span></div>
+                <div class="connection"><span id="connectionDot" class="dot"></span><span id="connectionText">Backend
+                        not connected</span></div>
+            </header>
+            <section class="page active" id="page-workout">
+                <div class="hero">
+                    <div class="eyebrow">YOUR PERSONAL FORM COACH</div>
+                    <h1>Move better.<br><span>Train smarter.</span></h1>
+                    <p>Real-time pose landmarks, repetition tracking, and technique cues powered by computer vision.</p>
+                    <div class="hero-tags"><span>✳ AI POSE TRACKING</span><span>↗ REAL-TIME FEEDBACK</span><span>⌁ YOUR
+                            PACE</span></div>
+                    <div class="hero-orb orb-one"></div>
+                    <div class="hero-orb orb-two"></div>
+                </div>
+                <div class="section-heading">
+                    <div><span class="eyebrow">LET'S GET MOVING</span>
+                        <h2>Your workout</h2>
+                    </div><span class="session-pill"><span class="live-dot"></span> LIVE SESSION</span>
+                </div>
+                <div class="workout-grid">
+                    <section class="panel setup-panel">
+                        <div class="panel-heading">
+                            <div><span class="step">01</span>
+                                <h3>Setup</h3>
+                            </div><span class="panel-icon">⚙</span>
+                        </div>
+                        <label for="exerciseSelect">Choose exercise</label><select id="exerciseSelect">
+                            <option>Squats</option>
+                            <option>Push-ups</option>
+                            <option>Bicep curls</option>
+                        </select>
+                        <div class="exercise-info" id="exerciseInfo">
+                            <div class="exercise-symbol">↕</div>
+                            <div><strong>Squats</strong>
+                                <p>Keep hips, knees and ankles visible.</p>
+                            </div>
+                        </div>
+                        <label for="targetRange">Repetition target</label>
+                        <div class="target-row"><input id="targetRange" type="range" min="5" max="50" step="5"
+                                value="15"><strong><span id="targetValue">15</span> reps</strong></div>
+                        <div class="tip-box"><span>✦</span>
+                            <div><strong>Coach's tip</strong>
+                                <p>Position your camera so the joints used by your exercise stay in frame.</p>
+                            </div>
+                        </div>
+                        <button id="startButton" class="btn btn-primary full">Start camera
+                            <span>↗</span></button><button id="stopButton" class="btn btn-secondary full" disabled>Stop
+                            session</button>
+                        <p class="microcopy">Camera access requires permission and a secure context (HTTPS or
+                            localhost).</p>
+                    </section>
+                    <section class="panel camera-panel">
+                        <div class="panel-heading">
+                            <div><span class="step">02</span>
+                                <h3>Live camera</h3>
+                            </div><span class="camera-status" id="cameraStatus">CAMERA OFF</span>
+                        </div>
+                        <div class="camera-stage"><video id="cameraVideo" autoplay muted playsinline
+                                hidden></video><canvas id="processedCanvas" hidden></canvas><img id="processedImage"
+                                alt="Processed webcam frame with pose landmarks" hidden>
+                            <div id="cameraPlaceholder" class="camera-placeholder">
+                                <div class="camera-ring"><span>⌁</span></div><strong>Your camera preview appears
+                                    here</strong>
+                                <p>Start the camera to begin tracking your movement.</p>
+                            </div>
+                            <div class="camera-overlay"><span class="overlay-pill"><span class="live-dot"></span> <span
+                                        id="overlayLabel">WAITING FOR CAMERA</span></span><span
+                                    class="overlay-corner">FORMFIT / CV</span></div>
+                        </div>
+                        <div class="camera-foot"><span><span class="dot"></span> Keep your full body visible</span><span
+                                id="frameRate">Waiting for frames</span></div>
+                    </section>
+                </div>
+                <div class="section-heading stats-heading">
+                    <div><span class="eyebrow">YOUR PERFORMANCE</span>
+                        <h2>Session stats</h2>
+                    </div>
+                </div>
+                <div class="stats-grid">
+                    <article class="stat-card"><span class="stat-label">REPETITIONS</span>
+                        <div class="stat-value"><span id="repCount">0</span><small>/ <span
+                                    id="repTarget">15</span></small></div>
+                        <div class="stat-bottom"><span>Completed reps</span><span class="stat-icon">↻</span></div>
+                    </article>
+                    <article class="stat-card"><span class="stat-label">JOINT ANGLE</span>
+                        <div class="stat-value"><span id="jointAngle">—</span><small id="angleUnit"></small></div>
+                        <div class="stat-bottom"><span>Estimated angle</span><span class="stat-icon">∠</span></div>
+                    </article>
+                    <article class="stat-card"><span class="stat-label">TARGET PROGRESS</span>
+                        <div class="stat-value"><span id="progressPercent">0</span><small>%</small></div>
+                        <div class="progress-track">
+                            <div id="progressBar" class="progress-fill"></div>
+                        </div>
+                        <div class="stat-bottom"><span id="remainingText">15 reps to go</span><span
+                                class="stat-icon">↗</span></div>
+                    </article>
+                    <article class="stat-card feedback-card"><span class="stat-label">AI COACH</span>
+                        <div class="feedback-title" id="feedbackTitle">Ready when you are</div>
+                        <p id="feedbackText">Start the camera and follow the cues as you move.</p>
+                        <div class="feedback-status"><span class="feedback-indicator"></span><span
+                                id="poseStatus">Awaiting pose</span></div>
+                    </article>
+                </div>
+                <footer>FormFit is a hackathon prototype, not a medical device. Move within your comfort range and stop
+                    if you feel pain.</footer>
+            </section>
+            <section class="page" id="page-how">
+                <div class="page-intro"><span class="eyebrow">A SIMPLE PROCESS</span>
+                    <h1>How it works</h1>
+                    <p>From camera frame to movement feedback, in a few steps.</p>
+                </div>
+                <div class="steps-grid">
+                    <article class="step-card"><span>01</span>
+                        <h3>Allow camera access</h3>
+                        <p>Your browser requests permission before capturing video.</p>
+                    </article>
+                    <article class="step-card"><span>02</span>
+                        <h3>Track body landmarks</h3>
+                        <p>Frames go over WebSocket to Python, where MediaPipe estimates pose landmarks.</p>
+                    </article>
+                    <article class="step-card"><span>03</span>
+                        <h3>Count movement phases</h3>
+                        <p>Joint angles and movement stages estimate completed repetitions.</p>
+                    </article>
+                    <article class="step-card"><span>04</span>
+                        <h3>Get feedback</h3>
+                        <p>View pose overlays, repetitions, joint angles and simple technique cues.</p>
+                    </article>
+                </div>
+                <div class="warning-note"><strong>Prototype limitation</strong>
+                    <p>Thresholds are approximate. Camera angle, lighting, occlusion and positioning affect results.
+                        This is not a validated safety assessment.</p>
+                </div>
+            </section>
+            <section class="page" id="page-about">
+                <div class="page-intro"><span class="eyebrow">BUILT WITH COMPUTER VISION</span>
+                    <h1>About FormFit</h1>
+                    <p>A web-based workout assistant built with browser APIs, FastAPI, OpenCV and MediaPipe.</p>
+                </div>
+                <div class="about-panel">
+                    <div class="about-logo">✳</div>
+                    <h2>Move with intention.</h2>
+                    <p>This hackathon prototype demonstrates real-time pose estimation and simple repetition tracking.
+                        Future work could include personalized form rules, session history, authentication and on-device
+                        pose inference.</p>
+                    <div class="tech-tags">
+                        <span>HTML</span><span>CSS</span><span>JavaScript</span><span>FastAPI</span><span>OpenCV</span><span>MediaPipe</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <div id="toast" class="toast" role="status"></div>
+    <script src="script.js"></script>
+</body>
+
+</html>
