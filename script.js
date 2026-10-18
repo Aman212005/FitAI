@@ -1,4 +1,4 @@
-const API_BASE=(window.FORMFIT_API_URL||"http://127.0.0.1:8000").replace(/\/$/,"");
+const API_BASE=(window.FORMFIT_API_URL||"https://fitai-mq5r.onrender.com").replace(/\/$/,"");
 const WS_BASE=API_BASE.replace(/^http:/,"ws:").replace(/^https:/,"wss:");
 const $=id=>document.getElementById(id);
 const video=$("cameraVideo"),canvas=$("processedCanvas"),ctx=canvas.getContext("2d"),processedImage=$("processedImage");
