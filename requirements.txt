@@ -1,0 +1,6 @@
+fastapi==0.115.12
+uvicorn[standard]==0.34.2
+mediapipe==0.10.21
+opencv-python-headless==4.11.0.86
+numpy==1.26.4
+protobuf==4.25.8
